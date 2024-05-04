@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.movieapp"
+    namespace = "com.example.emdb"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.movieapp"
+        applicationId = "com.example.emdb"
         minSdk = 29
         targetSdk = 34
         versionCode = 1

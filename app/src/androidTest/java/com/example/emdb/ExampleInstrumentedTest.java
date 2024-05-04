@@ -1,4 +1,4 @@
-package com.example.movieapp;
+package com.example.emdb;
 
 import android.content.Context;
 
