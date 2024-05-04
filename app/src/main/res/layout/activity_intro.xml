@@ -72,7 +72,8 @@
                     android:id="@+id/textView4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="You can browse movies and shows by genre, search for specific title, or check out our recommendation for you"
+                    android:layout_marginTop="10dp"
+                    android:text="You can browse movies and shows by genre, search for specific title, or add new movie"
                     android:textColor="#9F9A9A"
                     android:textSize="17sp" />
 
@@ -81,7 +82,7 @@
                     style="@android:style/Widget.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/orange_button_background"
                     android:text="Get Started"
                     android:textColor="@color/white" />
