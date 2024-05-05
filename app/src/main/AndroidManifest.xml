@@ -14,6 +14,9 @@
         android:theme="@style/Theme.MovieApp"
         tools:ignore="DataExtractionRules">
         <activity
+            android:name=".activities.DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetailActivity"
             android:exported="false" />
         <activity
@@ -30,8 +33,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.IntroActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
     </application>
 
 </manifest>

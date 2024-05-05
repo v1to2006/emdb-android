@@ -4,6 +4,7 @@ import com.example.emdb.models.Movie;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -143,6 +144,48 @@ public class Database {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Movie getMovieById(int id) {
+        Connection connection = createConnection();
+        if (connection == null) return null;
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        Movie movie = null;
+
+        try {
+            String query = "SELECT * FROM moviedb.movies WHERE idMovies = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                movie = new Movie(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getInt(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getDouble(8),
+                        resultSet.getString(9)
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return movie;
     }
 
     public ArrayList<String> getCategories() {
