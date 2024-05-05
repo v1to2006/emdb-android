@@ -12,37 +12,40 @@ import java.util.ArrayList;
 import android.os.StrictMode;
 
 public class Database {
+    private static final Database instance = new Database();
+
+    private Database() {}
+
+    public static Database getInstance() {
+        return instance;
+    }
+
     public Connection createConnection() {
-        // Allow network operations on the main thread (not recommended for production)
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        // Database connection parameters
         String connectionUrl = "jdbc:mysql://mc.koudata.fi:3306/moviedb?characterEncoding=latin1&useConfigs=maxPerformance";
         String username = "app";
         String password = "databaseApp!";
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(connectionUrl, username, password);
-
-            return connection;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-
+            return DriverManager.getConnection(connectionUrl, username, password);
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
     public ArrayList<Movie> getMovies() {
         Connection connection = createConnection();
+        if (connection == null) return null;
 
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies WHERE idMovies >= 103;");
 
-            ArrayList<Movie> movies = new ArrayList<Movie>();
-
+            ArrayList<Movie> movies = new ArrayList<>();
             while (resultSet.next()) {
                 movies.add(new Movie(
                         resultSet.getInt(1),
@@ -58,9 +61,15 @@ public class Database {
             }
 
             return movies;
-        } catch (SQLException exception) {
-            exception.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

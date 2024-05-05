@@ -17,40 +17,41 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.emdb.DetailActivity;
 import com.example.emdb.R;
-import com.example.emdb.classes.Database;
 import com.example.emdb.models.Movie;
 
 import java.util.ArrayList;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
-    Database database = new Database();
-    ArrayList<Movie> movies = database.getMovies();
-    Context context;
+    private ArrayList<Movie> movies;
+    private Context context;
+
+    public MovieListAdapter(ArrayList<Movie> movies) {
+        this.movies = movies;
+    }
 
     @NonNull
     @Override
-    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_movie, parent, false);
-
-        return new ViewHolder(inflate);
+        View view = LayoutInflater.from(context).inflate(R.layout.view_holder_movie, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
-        holder.movieTitleText.setText(movies.get(position).getTitle());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Movie movie = movies.get(position);
+        holder.movieTitleText.setText(movie.getTitle());
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transform(new CenterCrop(), new RoundedCorners(30));
 
         Glide.with(context)
-                .load(movies.get(position).getImage())
+                .load(movie.getImage())
                 .apply(requestOptions)
                 .into(holder.movieImage);
 
-        holder.itemView.setOnClickListener(view -> {
-            Intent intent = new Intent(holder.itemView.getContext(), DetailActivity.class);
-            intent.putExtra("id", movies.get(position).Id);
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("id", movie.getId());
             context.startActivity(intent);
         });
     }
@@ -60,10 +61,11 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
         return movies.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView movieTitleText;
         ImageView movieImage;
-        public ViewHolder(@NonNull View itemView) {
+
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             movieTitleText = itemView.findViewById(R.id.movieTitleText);
             movieImage = itemView.findViewById(R.id.movieImageView);
