@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initView();
-        new LoadMoviesTask().execute();
+        new LoadDashboardTask().execute();
     }
 
     private void initView() {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         bestMoviesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
 
-    private class LoadMoviesTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
+    private class LoadDashboardTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
 
         @Override
         protected void onPreExecute() {
