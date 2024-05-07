@@ -1,5 +1,6 @@
 package com.example.emdb.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;

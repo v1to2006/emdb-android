@@ -1,33 +1,20 @@
 package com.example.emdb.activities;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emdb.R;
-import com.example.emdb.adapters.CategoryListAdapter;
-import com.example.emdb.adapters.MovieListAdapter;
-import com.example.emdb.classes.Database;
 import com.example.emdb.fragments.AddMovieFragment;
 import com.example.emdb.fragments.HomeFragment;
 import com.example.emdb.fragments.ProfileFragment;
 import com.example.emdb.fragments.SearchFragment;
-import com.example.emdb.models.Movie;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.profile:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
+                    startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                    //getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
                     return true;
             }
             return false;

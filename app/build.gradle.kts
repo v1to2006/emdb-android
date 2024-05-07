@@ -46,4 +46,5 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("mysql:mysql-connector-java:5.1.29")
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
 }

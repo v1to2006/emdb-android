@@ -188,6 +188,41 @@ public class Database {
         return movie;
     }
 
+    public boolean userAlreadyExists(String username, String email) {
+        Connection connection = createConnection();
+        if (connection == null) return false;
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean userExists = false;
+
+        try {
+            String query = "SELECT * FROM moviedb.usertable WHERE username = ? OR email = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, username);
+            statement.setString(2, email);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                userExists = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return userExists;
+    }
+
+
     public ArrayList<String> getCategories() {
         return new ArrayList<String>() {{
             add("Action"); add("Adventure"); add("Animation"); add("Biography"); add("Comedy");
