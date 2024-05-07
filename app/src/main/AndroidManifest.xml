@@ -14,10 +14,19 @@
         android:theme="@style/Theme.MovieApp"
         tools:ignore="DataExtractionRules">
         <activity
-            android:name=".activities.DetailActivity"
+            android:name=".activities.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".DetailActivity"
+            android:name=".activities.AddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.DetailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
@@ -33,7 +42,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.IntroActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

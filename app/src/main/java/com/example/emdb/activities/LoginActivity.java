@@ -15,6 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.emdb.R;
 import com.example.emdb.classes.InputValidator;
 
+import java.net.InetSocketAddress;
+
 public class LoginActivity extends AppCompatActivity {
     private InputValidator inputValidator = new InputValidator();
 
@@ -45,7 +47,10 @@ public class LoginActivity extends AppCompatActivity {
             if (!inputValidator.validInput(loginInput.getText().toString()) || !inputValidator.validInput(passwordInput.getText().toString())) {
                 Toast.makeText(LoginActivity.this, "Your input was invalid, make sure it's not empty or doesn't contain symbols (\", ') ", Toast.LENGTH_SHORT).show();
             } else {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                startActivity(intent);
             }
         });
     }
