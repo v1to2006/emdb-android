@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.emdb.R;
+import com.example.emdb.classes.Client;
+import com.example.emdb.classes.Database;
 import com.example.emdb.classes.InputValidator;
+import com.example.emdb.models.User;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText usernameInput;
@@ -26,6 +30,8 @@ public class SignUpActivity extends AppCompatActivity {
     private ImageView backImage;
 
     private InputValidator inputValidator = new InputValidator();
+    private Database database = Database.getInstance();
+    private Client client = Client.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +54,54 @@ public class SignUpActivity extends AppCompatActivity {
         confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
         signUpButton = findViewById(R.id.signUpButton);
         login = findViewById(R.id.login);
-        backImage = findViewById(R.id.backImage10);
+        backImage = findViewById(R.id.backImageSignUp);
 
         login.setOnClickListener(view -> {
-            startActivity(new Intent(SignUpActivity.this, SignUpActivity.class));
+            startActivity(new Intent(SignUpActivity.this, LogInActivity.class));
         });
+
+        onSignUpButton();
 
         backImage.setOnClickListener(view -> finish());
+    }
 
+    private void onSignUpButton() {
         signUpButton.setOnClickListener(view -> {
-            boolean validUsername = inputValidator.validUsername(usernameInput.getText().toString());
+            String username = usernameInput.getText().toString();
+            String email = emailInput.getText().toString();
+            String password = passwordInput.getText().toString();
+            String confirmPassword = confirmPasswordInput.getText().toString();
 
+            boolean validUsername = inputValidator.validUsername(username);
+            boolean validEmail = inputValidator.validEmail(email);
+            boolean validPassword = inputValidator.validPassword(password);
+            boolean passwordMatching = inputValidator.passwordMatching(password, confirmPassword);
+            boolean userAvailable = !database.userAlreadyExists(username, email);
+
+            if (validUsername && validEmail && validPassword && passwordMatching && userAvailable) {
+                User user = new User(0, username, email, password);
+                database.signUpUser(user);
+                client.logIn(user);
+
+                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                if (!validUsername) {
+                    Toast.makeText(SignUpActivity.this, "Invalid username", Toast.LENGTH_SHORT).show();
+                } else if (!validEmail) {
+                    Toast.makeText(SignUpActivity.this, "Invalid email", Toast.LENGTH_SHORT).show();
+                } else if (!validPassword) {
+                    Toast.makeText(SignUpActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                } else if (!passwordMatching) {
+                    Toast.makeText(SignUpActivity.this, "Passwords don't match", Toast.LENGTH_SHORT).show();
+                } else if (!userAvailable) {
+                    Toast.makeText(SignUpActivity.this, "Username or email not available", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Invalid input", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
+
 }

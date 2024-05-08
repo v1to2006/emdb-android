@@ -30,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/backImage9"
+                    android:id="@+id/backImageLogIn"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:background="@drawable/oval_button_background"
@@ -49,7 +49,7 @@
                 android:text="Log In"
                 android:textSize="50sp"
                 android:textColor="@color/white"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginStart="32dp"
                 android:textStyle="bold"/>
 

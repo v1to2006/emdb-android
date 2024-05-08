@@ -1,66 +1,61 @@
 package com.example.emdb.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.emdb.R;
+import com.example.emdb.activities.LogInActivity;
+import com.example.emdb.activities.MainActivity;
+import com.example.emdb.activities.SignUpActivity;
+import com.example.emdb.classes.Client;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileFragment extends Fragment {
+    private TextView profileText;
+    private TextView profileEmailText;
+    private ImageView logoutButton;
+    private AppCompatButton deleteAccountButton;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Client client = Client.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        initView(view);
+
+        return view;
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void initView(View view) {
+        profileText = view.findViewById(R.id.profileText);
+        profileEmailText = view.findViewById(R.id.profileEmailText);
+        logoutButton = view.findViewById(R.id.logoutImage);
+        deleteAccountButton = view.findViewById(R.id.deleteAccountButton);
+
+        profileText.setText("You are logged in as " + client.loggedUser.getUsername());
+        profileEmailText.setText("Email: " + client.loggedUser.getEmail());
+
+        logoutButton.setOnClickListener(view -> {
+            client.logOut();
+
+            startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+        });
     }
 }

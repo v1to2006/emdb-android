@@ -3,6 +3,7 @@ package com.example.emdb.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.emdb.R;
+import com.example.emdb.classes.Client;
 import com.example.emdb.fragments.AddMovieFragment;
 import com.example.emdb.fragments.HomeFragment;
 import com.example.emdb.fragments.ProfileFragment;
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     SearchFragment searchFragment = new SearchFragment();
     AddMovieFragment addMovieFragment = new AddMovieFragment();
     ProfileFragment profileFragment = new ProfileFragment();
+
+    private Client client = Client.getInstance();
 
     private long backPressedTime = 0;
 
@@ -50,14 +54,24 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.add:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, addMovieFragment).commit();
+                    if (client.userLoggedIn()) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, addMovieFragment).commit();
+                    } else {
+                        startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                    }
+
                     return true;
 
                 case R.id.profile:
-                    startActivity(new Intent(MainActivity.this, LogInActivity.class));
-                    //getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
+                    if (client.userLoggedIn()) {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
+                    } else {
+                        startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                    }
+
                     return true;
             }
+
             return false;
         });
     }

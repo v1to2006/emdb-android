@@ -1,6 +1,7 @@
 package com.example.emdb.classes;
 
 import com.example.emdb.models.Movie;
+import com.example.emdb.models.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -44,7 +45,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies WHERE idMovies >= 103 ORDER BY Rating DESC;");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies ORDER BY Rating DESC;");
 
             ArrayList<Movie> movies = new ArrayList<>();
             while (resultSet.next()) {
@@ -80,7 +81,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies WHERE idMovies >= 103 ORDER BY ReleaseYear DESC;");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies ORDER BY ReleaseYear DESC;");
 
             ArrayList<Movie> movies = new ArrayList<>();
             while (resultSet.next()) {
@@ -116,7 +117,7 @@ public class Database {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies WHERE idMovies >= 103 AND Genres LIKE '%" + genre + "%';");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies WHERE Genres LIKE '%" + genre + "%';");
 
             ArrayList<Movie> movies = new ArrayList<>();
             while (resultSet.next()) {
@@ -188,13 +189,79 @@ public class Database {
         return movie;
     }
 
+    public void signUpUser(User user) {
+        Connection connection = createConnection();
+        if (connection == null) return;
+
+        PreparedStatement statement = null;
+
+        try {
+            String query = "INSERT INTO moviedb.usertable (idUser, username, email, password) VALUES (?, ?, ?, ?)";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, 0);
+            statement.setString(2, user.getUsername());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getPassword());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) statement.close();
+                connection.close();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+    public User logIn(String login, String password) {
+        Connection connection = createConnection();
+        if (connection == null) return null;
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        User user = null;
+
+        try {
+            String query = "SELECT * FROM moviedb.usertable WHERE (username = ? OR email = ?) AND password = ?";
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, login);
+            statement.setString(2, login);
+            statement.setString(3, password);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                user = new User(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4)
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return user;
+    }
+
     public boolean userAlreadyExists(String username, String email) {
         Connection connection = createConnection();
         if (connection == null) return false;
 
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        boolean userExists = false;
 
         try {
             String query = "SELECT * FROM moviedb.usertable WHERE username = ? OR email = ?";
@@ -203,9 +270,7 @@ public class Database {
             statement.setString(2, email);
             resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
-                userExists = true;
-            }
+            return resultSet.next();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -219,9 +284,8 @@ public class Database {
             }
         }
 
-        return userExists;
+        return false;
     }
-
 
     public ArrayList<String> getCategories() {
         return new ArrayList<String>() {{

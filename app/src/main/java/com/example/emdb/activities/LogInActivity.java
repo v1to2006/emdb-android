@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,7 +15,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.emdb.R;
+import com.example.emdb.classes.Client;
+import com.example.emdb.classes.Database;
 import com.example.emdb.classes.InputValidator;
+import com.example.emdb.models.User;
 
 public class LogInActivity extends AppCompatActivity {
     private InputValidator inputValidator = new InputValidator();
@@ -24,6 +28,10 @@ public class LogInActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView forgotPassword;
     private TextView register;
+    private ImageView backImage;
+
+    private Database database = Database.getInstance();
+    private Client client = Client.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +53,23 @@ public class LogInActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         forgotPassword = findViewById(R.id.forgotPassword);
         register = findViewById(R.id.register);
+        backImage = findViewById(R.id.backImageLogIn);
 
         loginButton.setOnClickListener(view -> {
             if (!inputValidator.validInput(loginInput.getText().toString()) || !inputValidator.validInput(passwordInput.getText().toString())) {
-                Toast.makeText(LogInActivity.this, "Your input was invalid, make sure it's not empty or doesn't contain symbols (\", ') ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LogInActivity.this, "Invalid or empty input", Toast.LENGTH_SHORT).show();
             } else {
-                Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                User user = database.logIn(loginInput.getText().toString(), passwordInput.getText().toString());
 
-                startActivity(intent);
+                if (user != null) {
+                    client.logIn(user);
+
+                    Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LogInActivity.this, "Account not found", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -64,5 +80,7 @@ public class LogInActivity extends AppCompatActivity {
         register.setOnClickListener(view -> {
             startActivity(new Intent(LogInActivity.this, SignUpActivity.class));
         });
+
+        backImage.setOnClickListener(view -> finish());
     }
 }

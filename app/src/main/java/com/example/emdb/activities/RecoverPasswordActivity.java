@@ -29,7 +29,7 @@ public class RecoverPasswordActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        backImage = findViewById(R.id.backImage9);
+        backImage = findViewById(R.id.backImageRecoverPassword);
 
         backImage.setOnClickListener(view -> finish());
     }
