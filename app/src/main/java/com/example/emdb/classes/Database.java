@@ -205,7 +205,12 @@ public class Database {
             statement.setString(2, email);
             resultSet = statement.executeQuery();
 
-            return resultSet.next();
+            boolean userExists = resultSet.next();
+
+            System.out.println("Query: " + query);
+            System.out.println("User exists: " + userExists);
+
+            return userExists;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -221,6 +226,7 @@ public class Database {
 
         return false;
     }
+
 
     public void createMovie(Movie movie) {
         Connection connection = createConnection();

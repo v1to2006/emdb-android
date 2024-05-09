@@ -74,6 +74,8 @@ public class SignUpFragment extends Fragment {
                     Intent intent = new Intent(currentActivity, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(currentActivity, "Username or email not available", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (!validUsername) {
@@ -84,8 +86,6 @@ public class SignUpFragment extends Fragment {
                     Toast.makeText(currentActivity, "Invalid password", Toast.LENGTH_SHORT).show();
                 } else if (!passwordMatching) {
                     Toast.makeText(currentActivity, "Passwords don't match", Toast.LENGTH_SHORT).show();
-                } else if (!userAvailable) {
-                    Toast.makeText(currentActivity, "Username or email not available", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(currentActivity, "Invalid input", Toast.LENGTH_SHORT).show();
                 }

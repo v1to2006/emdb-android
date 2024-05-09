@@ -38,7 +38,7 @@ public class InputValidator {
     }
 
     public boolean containsSpecialSymbol(String password) {
-        Pattern pattern = Pattern.compile("[!#?&%$€£@.]");
+        Pattern pattern = Pattern.compile("[!#?&%$€£@]");
         Matcher matcher = pattern.matcher(password);
         return matcher.find();
     }
