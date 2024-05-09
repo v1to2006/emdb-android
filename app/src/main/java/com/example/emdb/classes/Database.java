@@ -89,6 +89,11 @@ public class Database {
         return fetchMovies(query);
     }
 
+    public ArrayList<Movie> getMovieBySearch(String search) {
+        String query = "SELECT * FROM moviedb.movies WHERE Name LIKE '%" + search + "%';";
+        return fetchMovies(query);
+    }
+
     public Movie getMovieById(int id) {
         String query = "SELECT * FROM moviedb.movies WHERE idMovies = ?";
         try (Connection connection = createConnection();

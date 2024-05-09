@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class LogInFragment extends Fragment {
     private Button loginButton;
     private TextView forgotPassword;
     private TextView signUp;
+    private ImageView backImage;
 
     private InputValidator inputValidator = new InputValidator();
     private Database database = Database.getInstance();
@@ -59,6 +61,7 @@ public class LogInFragment extends Fragment {
         loginButton = view.findViewById(R.id.loginButton);
         forgotPassword = view.findViewById(R.id.forgotPassword);
         signUp = view.findViewById(R.id.register);
+        backImage = view.findViewById(R.id.backImageLogIn);
 
         loginButton.setOnClickListener(view1 -> {
             String loginText = loginInput.getText().toString();
@@ -92,6 +95,12 @@ public class LogInFragment extends Fragment {
         signUp.setOnClickListener(view1 -> {
             if (getActivity() instanceof OnButtonClickListener) {
                 ((OnButtonClickListener) getActivity()).onSignUpClicked();
+            }
+        });
+
+        backImage.setOnClickListener(view1 -> {
+            if (getActivity() instanceof OnButtonClickListener) {
+                ((OnButtonClickListener) getActivity()).onHomeClicked();
             }
         });
     }

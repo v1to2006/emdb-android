@@ -1,66 +1,94 @@
 package com.example.emdb.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.emdb.R;
+import com.example.emdb.adapters.MovieListAdapter;
+import com.example.emdb.adapters.SearchMovieListAdapter;
+import com.example.emdb.classes.Database;
+import com.example.emdb.models.Movie;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class SearchFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private EditText searchText;
+    private RecyclerView searchMoviesRecycler;
+    private ProgressBar searchMoviesLoading;
+    private SearchMovieListAdapter searchMoviesAdapter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        initView(view);
+        loadSearchedMovies("");
+        return view;
+    }
+
+    private void initView(View view) {
+        searchText = view.findViewById(R.id.searchText);
+        searchMoviesRecycler = view.findViewById(R.id.searchMovieView);
+        searchMoviesLoading = view.findViewById(R.id.searchMovieProgressBar);
+
+        searchMoviesRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        searchMoviesAdapter = new SearchMovieListAdapter(new ArrayList<>());
+        searchMoviesRecycler.setAdapter(searchMoviesAdapter);
+
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loadSearchedMovies(s.toString());
+            }
+        });
+    }
+
+    private void loadSearchedMovies(String query) {
+        new LoadSearchedMoviesAsyncTask().execute(query);
+    }
+
+    private class LoadSearchedMoviesAsyncTask extends AsyncTask<String, Void, ArrayList<Movie>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            searchMoviesLoading.setVisibility(View.VISIBLE);
         }
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        @Override
+        protected ArrayList<Movie> doInBackground(String... queries) {
+            String query = queries[0];
+            return Database.getInstance().getMovieBySearch(query);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Movie> movies) {
+            super.onPostExecute(movies);
+            searchMoviesLoading.setVisibility(View.GONE);
+            if (movies != null) {
+                searchMoviesAdapter = new SearchMovieListAdapter(movies);
+                searchMoviesRecycler.setAdapter(searchMoviesAdapter);
+            }
+        }
     }
 }

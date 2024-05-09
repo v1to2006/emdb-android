@@ -21,11 +21,11 @@ import com.example.emdb.models.Movie;
 
 import java.util.ArrayList;
 
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
+public class SearchMovieListAdapter extends RecyclerView.Adapter<SearchMovieListAdapter.ViewHolder> {
     private ArrayList<Movie> movies;
     private Context context;
 
-    public MovieListAdapter(ArrayList<Movie> movies) {
+    public SearchMovieListAdapter(ArrayList<Movie> movies) {
         this.movies = movies;
     }
 
@@ -33,7 +33,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.view_holder_home_movie, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.view_holder_search_movie, parent, false);
         return new ViewHolder(view);
     }
 
@@ -41,6 +41,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Movie movie = movies.get(position);
         holder.movieTitleText.setText(movie.getTitle());
+        holder.movieRatingText.setText("" + movie.getRating());
+        holder.movieYearText.setText(movie.getReleaseYear());
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transform(new CenterCrop(), new RoundedCorners(30));
 
@@ -63,11 +65,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView movieTitleText;
+        TextView movieRatingText;
+        TextView movieYearText;
         ImageView movieImage;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             movieTitleText = itemView.findViewById(R.id.movieTitleText);
+            movieRatingText = itemView.findViewById(R.id.movieRatingText);
+            movieYearText = itemView.findViewById(R.id.movieYearText);
             movieImage = itemView.findViewById(R.id.movieImageView);
         }
     }

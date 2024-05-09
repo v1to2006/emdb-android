@@ -122,4 +122,9 @@ public class MainActivity extends AppCompatActivity implements OnButtonClickList
     public void onRecoverPasswordClicked() {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, recoverPasswordFragment).commit();
     }
+
+    @Override
+    public void onHomeClicked() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+    }
 }
