@@ -11,25 +11,13 @@
         android:label="EMDb"
         android:roundIcon="@mipmap/main_logo_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MovieApp"
+        android:theme="@style/Theme.EMDb"
         tools:ignore="DataExtractionRules">
         <activity
             android:name=".activities.RecoverPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.AddActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".activities.DetailActivity"
@@ -45,9 +33,6 @@
         </activity>
         <activity
             android:name=".activities.LogInActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.IntroActivity"
             android:exported="false" />
     </application>
 

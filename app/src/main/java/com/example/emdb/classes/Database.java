@@ -39,6 +39,16 @@ public class Database {
         }
     }
 
+    public boolean checkConnection() {
+        Connection connection = createConnection();
+
+        if (connection == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public ArrayList<Movie> getBestMovies() {
         Connection connection = createConnection();
         if (connection == null) return null;
@@ -57,7 +67,7 @@ public class Database {
                         resultSet.getString(5),
                         resultSet.getString(6),
                         resultSet.getString(7),
-                        resultSet.getDouble(8),
+                        resultSet.getFloat(8),
                         resultSet.getString(9)
                 ));
             }
@@ -93,7 +103,7 @@ public class Database {
                         resultSet.getString(5),
                         resultSet.getString(6),
                         resultSet.getString(7),
-                        resultSet.getDouble(8),
+                        resultSet.getFloat(8),
                         resultSet.getString(9)
                 ));
             }
@@ -129,7 +139,7 @@ public class Database {
                         resultSet.getString(5),
                         resultSet.getString(6),
                         resultSet.getString(7),
-                        resultSet.getDouble(8),
+                        resultSet.getFloat(8),
                         resultSet.getString(9)
                 ));
             }
@@ -170,7 +180,7 @@ public class Database {
                         resultSet.getString(5),
                         resultSet.getString(6),
                         resultSet.getString(7),
-                        resultSet.getDouble(8),
+                        resultSet.getFloat(8),
                         resultSet.getString(9)
                 );
             }
@@ -285,6 +295,92 @@ public class Database {
         }
 
         return false;
+    }
+
+    public void createMovie(Movie movie) {
+        Connection connection = createConnection();
+        if (connection == null) return;
+
+        PreparedStatement statement = null;
+
+        try {
+            String query = "INSERT INTO moviedb.movies (idMovies, Name, Length, ReleaseYear, Genres, MainActors, Director, Rating, Image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, 0);
+            statement.setString(2, movie.getTitle());
+            statement.setInt(3, movie.getLength());
+            statement.setString(4, movie.getReleaseYear());
+            statement.setString(5, movie.getGenres());
+            statement.setString(6, movie.getStars());
+            statement.setString(7, movie.getDirector());
+            statement.setFloat(8, movie.getRating());
+            statement.setString(9, movie.getImage());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) statement.close();
+                connection.close();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+    public boolean movieAlreadyExists(String title) {
+        Connection connection = createConnection();
+        if (connection == null) return false;
+
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            String query = "SELECT * FROM moviedb.movies WHERE Name = ?";
+            statement = connection.prepareStatement(query);
+            statement.setString(1, title);
+            resultSet = statement.executeQuery();
+
+            return resultSet.next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    public void deleteAccount(int userId) {
+        Connection connection = createConnection();
+        if (connection == null) return;
+
+        PreparedStatement statement = null;
+
+        try {
+            String query = "DELETE FROM moviedb.usertable WHERE idUser = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, userId);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) statement.close();
+                connection.close();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+        }
     }
 
     public ArrayList<String> getCategories() {

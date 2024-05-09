@@ -1,7 +1,7 @@
 package com.example.emdb.models;
 
 public class Movie {
-    public Movie(int id, String title, int length, String releaseYear, String genres, String stars, String director, double rating, String image) {
+    public Movie(int id, String title, int length, String releaseYear, String genres, String stars, String director, float rating, String image) {
         Id = id;
         Title = title;
         Length = length;
@@ -20,7 +20,7 @@ public class Movie {
     public String Genres;
     public String Stars;
     public String Director;
-    public double Rating;
+    public float Rating;
     public String Image;
 
     public int getId() {
@@ -79,11 +79,11 @@ public class Movie {
         Director = director;
     }
 
-    public double getRating() {
+    public float getRating() {
         return Rating;
     }
 
-    private void setRating(double rating) {
+    private void setRating(float rating) {
         Rating = rating;
     }
 

@@ -7,13 +7,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
+import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.emdb.R;
 import com.example.emdb.classes.Client;
 import com.example.emdb.classes.Database;
@@ -36,13 +36,8 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_log_in);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        initWindowInsets();
 
         initView();
     }
@@ -56,10 +51,13 @@ public class LogInActivity extends AppCompatActivity {
         backImage = findViewById(R.id.backImageLogIn);
 
         loginButton.setOnClickListener(view -> {
-            if (!inputValidator.validInput(loginInput.getText().toString()) || !inputValidator.validInput(passwordInput.getText().toString())) {
+            String loginText = loginInput.getText().toString();
+            String passwordText = passwordInput.getText().toString();
+
+            if (!inputValidator.validInput(loginText) || !inputValidator.validInput(passwordText)) {
                 Toast.makeText(LogInActivity.this, "Invalid or empty input", Toast.LENGTH_SHORT).show();
             } else {
-                User user = database.logIn(loginInput.getText().toString(), passwordInput.getText().toString());
+                User user = database.logIn(loginText, passwordText);
 
                 if (user != null) {
                     client.logIn(user);
@@ -82,5 +80,13 @@ public class LogInActivity extends AppCompatActivity {
         });
 
         backImage.setOnClickListener(view -> finish());
+    }
+
+    private void initWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
     }
 }

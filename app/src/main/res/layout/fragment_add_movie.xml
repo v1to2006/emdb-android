@@ -20,11 +20,175 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Add Movie"
+                android:textSize="50sp"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:layout_marginStart="32dp"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/movieNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Title *"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:inputType="text"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <EditText
+                android:id="@+id/movieLengthInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Length (min) *"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <EditText
+                android:id="@+id/movieYearInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Release Year *"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <EditText
+                android:id="@+id/movieGenresInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Genres *"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Example: Action, Drama, Thriller"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"/>
+
+            <EditText
+                android:id="@+id/movieDirectorInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Director *"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <EditText
+                android:id="@+id/movieStarsInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Stars *"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Example: Tom Cruise, Miles Teller"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"/>
+
+            <EditText
+                android:id="@+id/movieRatingInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="IMDB Rating (0.0) *"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <EditText
+                android:id="@+id/movieImageInput"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Image URL (optional)"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:ems="10"
+                android:background="@drawable/edittext_background"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="We recommend to copy image from IMDB.com"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/submitButton"
+                style="@android:style/Widget.Button"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="128dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/orange_button_background"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit" />
+
         </LinearLayout>
     </ScrollView>
 

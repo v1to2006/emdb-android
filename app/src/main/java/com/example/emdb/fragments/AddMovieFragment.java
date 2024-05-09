@@ -1,66 +1,106 @@
 package com.example.emdb.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import com.example.emdb.R;
+import com.example.emdb.activities.MainActivity;
+import com.example.emdb.classes.Database;
+import com.example.emdb.classes.InputValidator;
+import com.example.emdb.models.Movie;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddMovieFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddMovieFragment extends Fragment {
+    private EditText titleInput;
+    private EditText lengthInput;
+    private EditText yearInput;
+    private EditText genresInput;
+    private EditText directorInput;
+    private EditText starsInput;
+    private EditText ratingInput;
+    private EditText imageUrlInput;
+    private AppCompatButton submitButton;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AddMovieFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddMovieFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddMovieFragment newInstance(String param1, String param2) {
-        AddMovieFragment fragment = new AddMovieFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Database database = Database.getInstance();
+    private InputValidator inputValidator = new InputValidator();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_movie, container, false);
+        initView(view);
+        return view;
+    }
+
+    private void initView(View view) {
+        titleInput = view.findViewById(R.id.movieNameInput);
+        lengthInput = view.findViewById(R.id.movieLengthInput);
+        yearInput = view.findViewById(R.id.movieYearInput);
+        genresInput = view.findViewById(R.id.movieGenresInput);
+        directorInput = view.findViewById(R.id.movieDirectorInput);
+        starsInput = view.findViewById(R.id.movieStarsInput);
+        ratingInput = view.findViewById(R.id.movieRatingInput);
+        imageUrlInput = view.findViewById(R.id.movieImageInput);
+        submitButton = view.findViewById(R.id.submitButton);
+        submitButton.setOnClickListener(v -> onSubmitButton());
+    }
+
+    private void onSubmitButton() {
+        String title = titleInput.getText().toString();
+        String lengthText = lengthInput.getText().toString();
+        String year = yearInput.getText().toString();
+        String genres = genresInput.getText().toString();
+        String director = directorInput.getText().toString();
+        String stars = starsInput.getText().toString();
+        String ratingText = ratingInput.getText().toString();
+        String imageUrl = imageUrlInput.getText().toString();
+
+        boolean validTitle = inputValidator.validInput(title);
+        boolean validLength = inputValidator.validLength(lengthText);
+        boolean validYear = inputValidator.validReleaseYear(year);
+        boolean validGenres = inputValidator.validInput(genres);
+        boolean validDirector = inputValidator.validInput(director);
+        boolean validStars = inputValidator.validInput(stars);
+        boolean validRating = inputValidator.validRating(ratingText);
+        boolean movieAvailable = !database.movieAlreadyExists(title);
+
+        FragmentActivity currentActivity = getActivity();
+
+        if (validTitle && validLength && validYear && validGenres && validDirector && validStars && validRating) {
+            int length = Integer.parseInt(lengthText);
+            float rating = Float.parseFloat(ratingText);
+
+            Movie movie = new Movie(0, title, length, year, genres, director, stars, rating, imageUrl);
+            database.createMovie(movie);
+
+            Toast.makeText(currentActivity, "Movie added", Toast.LENGTH_SHORT).show();
+
+            startActivity(new Intent(currentActivity, MainActivity.class));
+        } else {
+            if (!validTitle) {
+                Toast.makeText(currentActivity, "Invalid title input", Toast.LENGTH_SHORT).show();
+            } else if (!validLength) {
+                Toast.makeText(currentActivity, "Invalid length input", Toast.LENGTH_SHORT).show();
+            } else if (!validYear) {
+                Toast.makeText(currentActivity, "Invalid release year input", Toast.LENGTH_SHORT).show();
+            } else if (!validGenres) {
+                Toast.makeText(currentActivity, "Invalid genres input", Toast.LENGTH_SHORT).show();
+            } else if (!validDirector) {
+                Toast.makeText(currentActivity, "Invalid director input", Toast.LENGTH_SHORT).show();
+            } else if (!validStars) {
+                Toast.makeText(currentActivity, "Invalid stars input", Toast.LENGTH_SHORT).show();
+            } else if (!validRating) {
+                Toast.makeText(currentActivity, "Invalid rating input", Toast.LENGTH_SHORT).show();
+            } else if (!movieAvailable) {
+                Toast.makeText(currentActivity, "Movie already exists", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(currentActivity, "Invalid input", Toast.LENGTH_SHORT).show();
+            }
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_add_movie, container, false);
     }
 }

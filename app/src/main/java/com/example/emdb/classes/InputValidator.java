@@ -1,31 +1,23 @@
 package com.example.emdb.classes;
 
+import java.time.Year;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InputValidator {
     public boolean validInput(String input) {
-        if (input.trim().isEmpty())
-            return false;
-
-        return true;
+        return !input.trim().isEmpty();
     }
 
     public boolean validUsername(String username) {
-        if (!validInput(username))
-            return false;
-
-        return true;
+        return validInput(username);
     }
 
     public boolean validEmail(String email) {
         if (!validInput(email))
             return false;
 
-        if (!email.contains("@") || !email.contains("."))
-            return false;
-
-        return true;
+        return email.contains("@") && email.contains(".");
     }
 
     public boolean passwordMatching(String password, String confirmPassword) {
@@ -33,22 +25,10 @@ public class InputValidator {
     }
 
     public boolean validPassword(String password) {
-        if (password.length() < 6) {
-            return false;
-        }
-
-        if (!containsUppercase(password)) {
-            return false;
-        }
-
-        if (!containsSpecialSymbol(password)) {
-            return false;
-        }
-
-        return true;
+        return password.length() >= 6 && containsUppercase(password) && containsSpecialSymbol(password);
     }
 
-    private boolean containsUppercase(String password) {
+    public boolean containsUppercase(String password) {
         for (char character : password.toCharArray()) {
             if (Character.isUpperCase(character)) {
                 return true;
@@ -57,9 +37,54 @@ public class InputValidator {
         return false;
     }
 
-    private boolean containsSpecialSymbol(String password) {
-        Pattern pattern = Pattern.compile("[!#?&%$€£@]");
+    public boolean containsSpecialSymbol(String password) {
+        Pattern pattern = Pattern.compile("[!#?&%$€£@.]");
         Matcher matcher = pattern.matcher(password);
         return matcher.find();
+    }
+
+    public boolean validLength(String lengthInput) {
+        int length;
+
+        int minLength = 0;
+        int maxLength = 6000;
+
+        try {
+            length = Integer.parseInt(lengthInput);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return length >= minLength && length <= maxLength;
+    }
+
+    public boolean validReleaseYear(String releaseYearInput) {
+        int year;
+
+        int minYear = 1888;
+        int maxYear = Year.now().getValue() + 10;
+
+        try {
+            year = Integer.parseInt(releaseYearInput);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return year >= minYear && year <= maxYear;
+    }
+
+    public boolean validRating(String ratingInput) {
+        float rating;
+
+        float maxRating = 10.0f;
+        float minRating = 0.0f;
+
+        try {
+            rating = Float.parseFloat(ratingInput);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return rating >= minRating && rating <= maxRating;
     }
 }

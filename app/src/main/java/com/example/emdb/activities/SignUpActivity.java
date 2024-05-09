@@ -78,14 +78,16 @@ public class SignUpActivity extends AppCompatActivity {
             boolean passwordMatching = inputValidator.passwordMatching(password, confirmPassword);
             boolean userAvailable = !database.userAlreadyExists(username, email);
 
-            if (validUsername && validEmail && validPassword && passwordMatching && userAvailable) {
-                User user = new User(0, username, email, password);
-                database.signUpUser(user);
-                client.logIn(user);
+            if (validUsername && validEmail && validPassword && passwordMatching) {
+                if (userAvailable) {
+                    User user = new User(0, username, email, password);
+                    database.signUpUser(user);
+                    client.logIn(user);
 
-                Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             } else {
                 if (!validUsername) {
                     Toast.makeText(SignUpActivity.this, "Invalid username", Toast.LENGTH_SHORT).show();

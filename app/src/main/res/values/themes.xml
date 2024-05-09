@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MovieApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.EMDb" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimaryDark">@color/main_color</item>
     </style>
 </resources>

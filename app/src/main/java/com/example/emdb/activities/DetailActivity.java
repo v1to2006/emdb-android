@@ -86,7 +86,7 @@ public class DetailActivity extends AppCompatActivity {
                         .load(movie.getImage())
                         .into(detailImage);
 
-                detailRating.setText(Double.toString(movie.getRating()));
+                detailRating.setText(String.format("%.1f", movie.getRating()));
                 detailLength.setText(movie.getLength() + " min");
                 detailYear.setText(movie.getReleaseYear());
                 detailDirector.setText(movie.getDirector());
