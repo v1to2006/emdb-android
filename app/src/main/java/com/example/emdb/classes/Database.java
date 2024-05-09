@@ -49,9 +49,12 @@ public class Database {
     }
 
     private ArrayList<Movie> fetchMovies(String query) {
-        try (Connection connection = createConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+        Connection connection = createConnection();
+        if (connection == null) return null;
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
 
             ArrayList<Movie> movies = new ArrayList<>();
             while (resultSet.next()) {
