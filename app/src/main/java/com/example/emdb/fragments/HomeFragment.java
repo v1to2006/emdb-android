@@ -1,18 +1,24 @@
 package com.example.emdb.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.emdb.R;
+import com.example.emdb.activities.MainActivity;
 import com.example.emdb.adapters.CategoryListAdapter;
 import com.example.emdb.adapters.MovieListAdapter;
 import com.example.emdb.classes.Database;
@@ -20,7 +26,9 @@ import com.example.emdb.models.Movie;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    SwipeRefreshLayout homeSwipeRefresh;
+
     private RecyclerView.Adapter bestMoviesAdapter;
     private RecyclerView.Adapter newMoviesAdapter;
     private RecyclerView.Adapter categoriesAdapter;
@@ -46,6 +54,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View view) {
+        homeSwipeRefresh = view.findViewById(R.id.homeSwipeRefresh);
+        homeSwipeRefresh.setOnRefreshListener(this);
+
         bestMoviesRecycler = view.findViewById(R.id.bestMoviesView);
         newMoviesRecycler = view.findViewById(R.id.newMoviesView);
         categoriesRecycler = view.findViewById(R.id.categoriesView);
@@ -62,6 +73,15 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            startActivity(new Intent(getActivity(), MainActivity.class));
+
+            homeSwipeRefresh.setRefreshing(false);
+        });
     }
 
     private class LoadBestMoviesTask extends AsyncTask<Void, Void, ArrayList<Movie>> {

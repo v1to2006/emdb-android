@@ -47,4 +47,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("mysql:mysql-connector-java:5.1.29")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

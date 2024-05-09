@@ -1,12 +1,16 @@
 package com.example.emdb.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.emdb.R;
 import com.example.emdb.classes.Client;
@@ -22,18 +26,19 @@ import com.example.emdb.fragments.SignUpFragment;
 import com.example.emdb.interfaces.OnButtonClickListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity implements OnButtonClickListener {
+public class MainActivity extends AppCompatActivity implements OnButtonClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
+    private SwipeRefreshLayout noConnectionSwipeRefresh;
 
-    HomeFragment homeFragment = new HomeFragment();
-    SearchFragment searchFragment = new SearchFragment();
-    AddMovieFragment addMovieFragment = new AddMovieFragment();
-    ProfileFragment profileFragment = new ProfileFragment();
-    LogInFragment logInFragment = new LogInFragment();
-    SignUpFragment signUpFragment = new SignUpFragment();
-    DetailFragment detailFragment = new DetailFragment();
-    RecoverPasswordFragment recoverPasswordFragment = new RecoverPasswordFragment();
+    private HomeFragment homeFragment = new HomeFragment();
+    private SearchFragment searchFragment = new SearchFragment();
+    private AddMovieFragment addMovieFragment = new AddMovieFragment();
+    private ProfileFragment profileFragment = new ProfileFragment();
+    private LogInFragment logInFragment = new LogInFragment();
+    private SignUpFragment signUpFragment = new SignUpFragment();
+    private DetailFragment detailFragment = new DetailFragment();
+    private RecoverPasswordFragment recoverPasswordFragment = new RecoverPasswordFragment();
 
     private Client client = Client.getInstance();
     private Database database = Database.getInstance();
@@ -44,13 +49,18 @@ public class MainActivity extends AppCompatActivity implements OnButtonClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+
         if (!database.checkConnection()) {
             setContentView(R.layout.activity_no_connection);
+
+            noConnectionSwipeRefresh = findViewById(R.id.noConnectionSwipeRefresh);
+            noConnectionSwipeRefresh.setOnRefreshListener(this);
+
             return;
         }
-
-        setContentView(R.layout.activity_main);
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
 
@@ -126,5 +136,15 @@ public class MainActivity extends AppCompatActivity implements OnButtonClickList
     @Override
     public void onHomeClicked() {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (database.checkConnection()) {
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
+            }
+            noConnectionSwipeRefresh.setRefreshing(false);
+        });
     }
 }
