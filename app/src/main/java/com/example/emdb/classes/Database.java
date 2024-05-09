@@ -40,163 +40,80 @@ public class Database {
     }
 
     public boolean checkConnection() {
-        Connection connection = createConnection();
-
-        if (connection == null) {
+        try (Connection connection = createConnection()) {
+            return connection != null;
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
-        } else {
-            return true;
+        }
+    }
+
+    private ArrayList<Movie> fetchMovies(String query) {
+        try (Connection connection = createConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            ArrayList<Movie> movies = new ArrayList<>();
+            while (resultSet.next()) {
+                movies.add(new Movie(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getInt(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7),
+                        resultSet.getFloat(8),
+                        resultSet.getString(9)
+                ));
+            }
+            return movies;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     public ArrayList<Movie> getBestMovies() {
-        Connection connection = createConnection();
-        if (connection == null) return null;
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies ORDER BY Rating DESC;");
-
-            ArrayList<Movie> movies = new ArrayList<>();
-            while (resultSet.next()) {
-                movies.add(new Movie(
-                        resultSet.getInt(1),
-                        resultSet.getString(2),
-                        resultSet.getInt(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getString(6),
-                        resultSet.getString(7),
-                        resultSet.getFloat(8),
-                        resultSet.getString(9)
-                ));
-            }
-
-            return movies;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        String query = "SELECT * FROM moviedb.movies ORDER BY Rating DESC;";
+        return fetchMovies(query);
     }
 
     public ArrayList<Movie> getNewMovies() {
-        Connection connection = createConnection();
-        if (connection == null) return null;
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies ORDER BY ReleaseYear DESC;");
-
-            ArrayList<Movie> movies = new ArrayList<>();
-            while (resultSet.next()) {
-                movies.add(new Movie(
-                        resultSet.getInt(1),
-                        resultSet.getString(2),
-                        resultSet.getInt(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getString(6),
-                        resultSet.getString(7),
-                        resultSet.getFloat(8),
-                        resultSet.getString(9)
-                ));
-            }
-
-            return movies;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        String query = "SELECT * FROM moviedb.movies ORDER BY ReleaseYear DESC;";
+        return fetchMovies(query);
     }
 
     public ArrayList<Movie> getMoviesByGenre(String genre) {
-        Connection connection = createConnection();
-        if (connection == null) return null;
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM moviedb.movies WHERE Genres LIKE '%" + genre + "%';");
-
-            ArrayList<Movie> movies = new ArrayList<>();
-            while (resultSet.next()) {
-                movies.add(new Movie(
-                        resultSet.getInt(1),
-                        resultSet.getString(2),
-                        resultSet.getInt(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getString(6),
-                        resultSet.getString(7),
-                        resultSet.getFloat(8),
-                        resultSet.getString(9)
-                ));
-            }
-
-            return movies;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        String query = "SELECT * FROM moviedb.movies WHERE Genres LIKE '%" + genre + "%';";
+        return fetchMovies(query);
     }
 
     public Movie getMovieById(int id) {
-        Connection connection = createConnection();
-        if (connection == null) return null;
+        String query = "SELECT * FROM moviedb.movies WHERE idMovies = ?";
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        Movie movie = null;
-
-        try {
-            String query = "SELECT * FROM moviedb.movies WHERE idMovies = ?";
-            statement = connection.prepareStatement(query);
             statement.setInt(1, id);
-            resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                movie = new Movie(
-                        resultSet.getInt(1),
-                        resultSet.getString(2),
-                        resultSet.getInt(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getString(6),
-                        resultSet.getString(7),
-                        resultSet.getFloat(8),
-                        resultSet.getString(9)
-                );
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new Movie(
+                            resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getInt(3),
+                            resultSet.getString(4),
+                            resultSet.getString(5),
+                            resultSet.getString(6),
+                            resultSet.getString(7),
+                            resultSet.getFloat(8),
+                            resultSet.getString(9)
+                    );
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
-        return movie;
+        return null;
     }
 
     public void signUpUser(User user) {

@@ -14,6 +14,9 @@
         android:theme="@style/Theme.EMDb"
         tools:ignore="DataExtractionRules">
         <activity
+            android:name=".activities.NoConnectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.RecoverPasswordActivity"
             android:exported="false" />
         <activity

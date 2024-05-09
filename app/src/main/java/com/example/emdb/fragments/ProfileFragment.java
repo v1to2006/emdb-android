@@ -2,14 +2,10 @@ package com.example.emdb.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.emdb.R;
-import com.example.emdb.activities.LogInActivity;
 import com.example.emdb.activities.MainActivity;
-import com.example.emdb.activities.SignUpActivity;
 import com.example.emdb.classes.Client;
 import com.example.emdb.classes.Database;
 
@@ -58,7 +52,7 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
 
-            Toast.makeText(getActivity(), "You've been log out", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Log out successful", Toast.LENGTH_SHORT).show();
         });
     }
 }
