@@ -1,6 +1,5 @@
 package com.example.emdb.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,14 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.emdb.R;
 import com.example.emdb.activities.MainActivity;
-import com.example.emdb.adapters.CategoryListAdapter;
+import com.example.emdb.adapters.MovieCategoryListAdapter;
 import com.example.emdb.adapters.MovieListAdapter;
 import com.example.emdb.classes.Database;
 import com.example.emdb.models.Movie;
@@ -148,7 +146,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             super.onPostExecute(categories);
             categoriesLoading.setVisibility(View.GONE);
             if (categories != null) {
-                categoriesAdapter = new CategoryListAdapter(categories);
+                categoriesAdapter = new MovieCategoryListAdapter(categories);
                 categoriesRecycler.setAdapter(categoriesAdapter);
             }
         }

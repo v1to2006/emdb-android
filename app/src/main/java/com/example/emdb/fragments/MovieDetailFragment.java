@@ -1,28 +1,26 @@
-package com.example.emdb.activities;
+package com.example.emdb.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.emdb.R;
-import com.example.emdb.adapters.MovieListAdapter;
 import com.example.emdb.classes.Database;
 import com.example.emdb.models.Movie;
 
-import java.util.ArrayList;
+public class MovieDetailFragment extends Fragment {
 
-public class DetailActivity extends AppCompatActivity {
     private int movieId;
     private TextView detailTitle;
     private TextView detailRating;
@@ -36,28 +34,33 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView backImage;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        movieId = getIntent().getIntExtra("id", 0);
-        initView();
+        movieId = getArguments().getInt("id", 0);
+        initView(view);
         new LoadDetailTask().execute();
+
+        return view;
     }
 
-    private void initView() {
-        detailTitle = findViewById(R.id.detailTitle);
-        detailLoading = findViewById(R.id.detailProgressBar);
-        scrollView = findViewById(R.id.detailScrollView);
-        detailImage = findViewById(R.id.detailImage);
-        detailRating = findViewById(R.id.detailRating);
-        detailLength = findViewById(R.id.detailLength);
-        detailYear = findViewById(R.id.detailYear);
-        detailDirector = findViewById(R.id.detailDirector);
-        detailStars = findViewById(R.id.detailStars);
-        backImage = findViewById(R.id.backImage);
+    private void initView(View view) {
+        detailTitle = view.findViewById(R.id.detailTitle);
+        detailLoading = view.findViewById(R.id.detailProgressBar);
+        scrollView = view.findViewById(R.id.detailScrollView);
+        detailImage = view.findViewById(R.id.detailImage);
+        detailRating = view.findViewById(R.id.detailRating);
+        detailLength = view.findViewById(R.id.detailLength);
+        detailYear = view.findViewById(R.id.detailYear);
+        detailDirector = view.findViewById(R.id.detailDirector);
+        detailStars = view.findViewById(R.id.detailStars);
+        backImage = view.findViewById(R.id.backImage);
 
-        backImage.setOnClickListener(view -> finish());
+        backImage.setOnClickListener(v -> {
+            assert getFragmentManager() != null;
+            getFragmentManager().popBackStack();
+        });
     }
 
     private class LoadDetailTask extends AsyncTask<Void, Void, Movie> {
@@ -82,7 +85,7 @@ public class DetailActivity extends AppCompatActivity {
             if (movie != null) {
                 detailTitle.setText(movie.getTitle());
 
-                Glide.with(DetailActivity.this)
+                Glide.with(requireContext())
                         .load(movie.getImage())
                         .into(detailImage);
 

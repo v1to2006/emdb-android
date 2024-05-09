@@ -2,6 +2,7 @@ package com.example.emdb.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,7 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.emdb.R;
-import com.example.emdb.activities.DetailActivity;
+import com.example.emdb.fragments.MovieDetailFragment;
 import com.example.emdb.models.Movie;
 
 import java.util.ArrayList;
@@ -50,9 +52,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
                 .into(holder.movieImage);
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("id", movie.getId());
-            context.startActivity(intent);
+            MovieDetailFragment fragment = new MovieDetailFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", movie.getId());
+            fragment.setArguments(bundle);
+
+            ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 

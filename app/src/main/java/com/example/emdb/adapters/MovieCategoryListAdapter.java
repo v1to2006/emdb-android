@@ -1,21 +1,24 @@
 package com.example.emdb.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emdb.R;
+import com.example.emdb.fragments.MoviesByGenreFragment;
 
 import java.util.ArrayList;
 
 public class MovieCategoryListAdapter extends RecyclerView.Adapter<MovieCategoryListAdapter.ViewHolder> {
     private ArrayList<String> genres;
-    private ArrayList<String> movieGenres;
     private Context context;
 
     public MovieCategoryListAdapter(ArrayList<String> genres) {
@@ -36,9 +39,7 @@ public class MovieCategoryListAdapter extends RecyclerView.Adapter<MovieCategory
         holder.categoryText.setText(genre);
 
         holder.itemView.setOnClickListener(v -> {
-            //Intent intent = new Intent(context, DetailActivity.class);
-            //intent.putExtra("genre", genre);
-            //context.startActivity(intent);
+            openMoviesByGenreFragment(genre);
         });
     }
 
@@ -54,5 +55,17 @@ public class MovieCategoryListAdapter extends RecyclerView.Adapter<MovieCategory
             super(itemView);
             categoryText = itemView.findViewById(R.id.categoryText);
         }
+    }
+
+    private void openMoviesByGenreFragment(String genre) {
+        Fragment fragment = new MoviesByGenreFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("genre", genre);
+        fragment.setArguments(bundle);
+
+        ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

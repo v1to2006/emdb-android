@@ -16,9 +16,9 @@ import com.example.emdb.R;
 import com.example.emdb.classes.Client;
 import com.example.emdb.classes.Database;
 import com.example.emdb.fragments.AddMovieFragment;
-import com.example.emdb.fragments.DetailFragment;
 import com.example.emdb.fragments.HomeFragment;
 import com.example.emdb.fragments.LogInFragment;
+import com.example.emdb.fragments.MoviesByGenreFragment;
 import com.example.emdb.fragments.ProfileFragment;
 import com.example.emdb.fragments.RecoverPasswordFragment;
 import com.example.emdb.fragments.SearchFragment;
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements OnButtonClickList
     private ProfileFragment profileFragment = new ProfileFragment();
     private LogInFragment logInFragment = new LogInFragment();
     private SignUpFragment signUpFragment = new SignUpFragment();
-    private DetailFragment detailFragment = new DetailFragment();
     private RecoverPasswordFragment recoverPasswordFragment = new RecoverPasswordFragment();
 
     private Client client = Client.getInstance();
