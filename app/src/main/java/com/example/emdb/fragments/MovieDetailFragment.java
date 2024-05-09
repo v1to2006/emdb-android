@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +18,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.emdb.R;
+import com.example.emdb.adapters.MovieCategoryListAdapter;
 import com.example.emdb.classes.Database;
 import com.example.emdb.models.Movie;
+
+import java.util.ArrayList;
 
 public class MovieDetailFragment extends Fragment {
 
     private int movieId;
     private TextView detailTitle;
+
+    private RecyclerView.Adapter categoriesAdapter;
+
+    private RecyclerView categoriesRecycler;
+
+    private ProgressBar categoriesLoading;
+
     private TextView detailRating;
     private TextView detailLength;
     private TextView detailYear;
@@ -41,6 +53,7 @@ public class MovieDetailFragment extends Fragment {
         movieId = getArguments().getInt("id", 0);
         initView(view);
         new LoadDetailTask().execute();
+        new LoadCategoriesTask().execute();
 
         return view;
     }
@@ -50,6 +63,13 @@ public class MovieDetailFragment extends Fragment {
         detailLoading = view.findViewById(R.id.detailProgressBar);
         scrollView = view.findViewById(R.id.detailScrollView);
         detailImage = view.findViewById(R.id.detailImage);
+
+        categoriesRecycler = view.findViewById(R.id.detailCategoriesRecycler);
+
+        categoriesLoading = view.findViewById(R.id.detailCategoriesProgressBar);
+
+        categoriesRecycler.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+
         detailRating = view.findViewById(R.id.detailRating);
         detailLength = view.findViewById(R.id.detailLength);
         detailYear = view.findViewById(R.id.detailYear);
@@ -94,6 +114,29 @@ public class MovieDetailFragment extends Fragment {
                 detailYear.setText(movie.getReleaseYear());
                 detailDirector.setText(movie.getDirector());
                 detailStars.setText(movie.getStars());
+            }
+        }
+    }
+
+    private class LoadCategoriesTask extends AsyncTask<Void, Void, ArrayList<String>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            categoriesLoading.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(Void... voids) {
+            return Database.getInstance().getMovieGenres(movieId);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> categories) {
+            super.onPostExecute(categories);
+            categoriesLoading.setVisibility(View.GONE);
+            if (categories != null) {
+                categoriesAdapter = new MovieCategoryListAdapter(categories);
+                categoriesRecycler.setAdapter(categoriesAdapter);
             }
         }
     }

@@ -77,6 +77,46 @@ public class Database {
         }
     }
 
+    public ArrayList<String> getMovieGenres(int movieId) {
+        ArrayList<String> foundedGenres = new ArrayList<>();
+
+        Movie movie = getMovieById(movieId);
+        if (movie == null) return foundedGenres;
+
+        Connection connection = createConnection();
+        if (connection == null) return foundedGenres;
+
+        try {
+            String query = "SELECT Genres FROM moviedb.movies WHERE idMovies = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, movieId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String movieGenresString = resultSet.getString("Genres");
+                String[] movieGenresArray = movieGenresString.split(", ");
+
+                for (String genre : movieGenresArray) {
+                    if (movie.getGenres().contains(genre)) {
+                        foundedGenres.add(genre);
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return foundedGenres;
+    }
+
+
     public ArrayList<Movie> getBestMovies() {
         String query = "SELECT * FROM moviedb.movies ORDER BY Rating DESC;";
         return fetchMovies(query);
