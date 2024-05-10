@@ -27,7 +27,6 @@ import com.example.emdb.interfaces.OnButtonClickListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements OnButtonClickListener, SwipeRefreshLayout.OnRefreshListener {
-
     private BottomNavigationView bottomNavigationView;
     private SwipeRefreshLayout noConnectionSwipeRefresh;
 
